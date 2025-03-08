@@ -1,24 +1,19 @@
 const express = require('express');
-const router = express.Router();
 const Visitor = require('../models/Visitor');
 const auth = require('../middleware/auth');
-const multer = require('multer');
-const cloudinary = require('../config/cloudinary');
-const upload = multer({ dest: 'uploads/' });
+const router = express.Router();
 
 // Add Visitor
-router.post('/', auth, upload.single('photo'), async (req, res) => {
-  const { hotelId, name, age, idProof, mobileNumber, reasonForStay, checkInDate, checkOutDate } = req.body;
+router.post('/', auth, async (req, res) => {
+  const { hotelId, name, age, idProof, photo, mobileNumber, reasonForStay, checkInDate, checkOutDate } = req.body;
 
   try {
-    // Upload photo to Cloudinary
-    const result = await cloudinary.uploader.upload(req.file.path);
     const visitor = new Visitor({
       hotelId,
       name,
       age,
       idProof,
-      photo: result.secure_url,
+      photo,
       mobileNumber,
       reasonForStay,
       checkInDate,
@@ -27,17 +22,8 @@ router.post('/', auth, upload.single('photo'), async (req, res) => {
     await visitor.save();
     res.status(201).json(visitor);
   } catch (error) {
-    res.status(500).json({ error: 'Failed to add visitor' });
-  }
-});
-
-// Get Visitors for a Hotel
-router.get('/:hotelId', auth, async (req, res) => {
-  try {
-    const visitors = await Visitor.find({ hotelId: req.params.hotelId });
-    res.status(200).json(visitors);
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch visitors' });
+    console.error('Error adding visitor:', error);
+    res.status(500).json({ error: 'Failed to add visitor', details: error.message });
   }
 });
 
