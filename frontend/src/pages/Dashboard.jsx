@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import HotelForm from '../components/HotelForm';
 import VisitorForm from '../components/VisitorForm';
+import VisitorsList from '../components/VisitorList';
 
 const Dashboard = () => {
   const [hotels, setHotels] = useState([]);
