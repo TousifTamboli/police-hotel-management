@@ -4,21 +4,24 @@ import axios from 'axios';
 const HotelOwnerDashboard = () => {
   const [visitors, setVisitors] = useState([]);
 
-  // Fetch visitors for the logged-in hotel owner's hotel
   useEffect(() => {
     const fetchVisitors = async () => {
-        try {
-          const token = localStorage.getItem('token');
-          const response = await axios.get('/api/visitors', {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-          setVisitors(response.data);
-        } catch (error) {
-          console.error('Error fetching visitors:', error.response?.data || error.message);
-        }
-      };
+      try {
+        const token = localStorage.getItem('token');
+        console.log("Token being sent:", token); // ✅ Check if token exists
+  
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/visitors`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setVisitors(response.data);
+      } catch (error) {
+        console.error('Error fetching visitors:', error.response?.data || error.message);
+      }
+    };
     fetchVisitors();
   }, []);
+  
+  
 
   return (
     <div>
