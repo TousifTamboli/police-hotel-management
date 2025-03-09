@@ -10,16 +10,19 @@ console.log('Rendering PoliceAdminDashboard');
   // Fetch all hotels
   useEffect(() => {
     const fetchHotels = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        const response = await axios.get('/api/hotels', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setHotels(response.data);
-      } catch (error) {
-        console.error('Error fetching hotels:', error);
-      }
-    };
+  try {
+    const token = localStorage.getItem('token');
+    console.log("Fetching hotels with token:", token);
+    const response = await axios.get('/api/hotels', {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    console.log("Hotels fetched:", response.data);
+    setHotels(response.data);
+  } catch (error) {
+    console.error('Error fetching hotels:', error.response?.data || error.message);
+  }
+};
+
     fetchHotels();
   }, []);
 

@@ -58,8 +58,10 @@ router.post('/login', async (req, res) => {
 
     res.status(200).json({
       message: 'Login successful',
+      token,  // Include token in response
       user: { id: user._id, email: user.email, role: user.role },
     });
+    
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Login failed' });
@@ -67,9 +69,9 @@ router.post('/login', async (req, res) => {
 });
 
 // Logout Route
-router.post('/logout', (req, res) => {
-  res.clearCookie('token');
-  res.status(200).json({ message: 'Logged out successfully' });
-});
+// router.post('/logout', (req, res) => {
+//   res.clearCookie('token');
+//   res.status(200).json({ message: 'Logged out successfully' });
+// });
 
 module.exports = router;

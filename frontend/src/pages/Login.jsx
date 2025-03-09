@@ -11,24 +11,28 @@ const Login = () => {
     e.preventDefault();
     try {
       const response = await axios.post('/api/auth/login', { email, password });
+  
+      console.log('Response Data:', response.data); // Debugging line
+  
       const { token, user } = response.data;
-
-      // Store token and role in localStorage
       localStorage.setItem('token', token);
       localStorage.setItem('role', user.role);
-
-      // Redirect based on role
+      if (!token) {
+        throw new Error('Token is missing from response');
+      }
+  
       if (user.role === 'police') {
         navigate('/dashboard/police');
       } else if (user.role === 'hotelOwner') {
         navigate('/dashboard/hotel');
       } else {
-        navigate('/login'); // Fallback case
+        navigate('/login');
       }
     } catch (error) {
       console.error('Login failed:', error.response?.data || error.message);
     }
   };
+  
 
   return (
     <div>
