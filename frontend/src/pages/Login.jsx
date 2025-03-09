@@ -14,18 +14,18 @@ function Login() {
       body: JSON.stringify({ email, password }),
     });
 
-    const data = await response.json();
+    const result = await response.json();
     if (response.ok) {
-      localStorage.setItem("token", data.token);
-      navigate("/dashboard");
+      localStorage.setItem("token", result.token); // Save token
+      navigate("/dashboard"); // Redirect to Dashboard
     } else {
-      alert(data.message);
+      alert(result.message);
     }
   };
 
   return (
     <div>
-      <h2>Login</h2>
+      <h2>Hotel Owner Login</h2>
       <form onSubmit={handleLogin}>
         <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
         <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />

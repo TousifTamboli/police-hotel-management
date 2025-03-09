@@ -91,4 +91,35 @@ router.post("/login", async (req, res) => {
   }
 });
 
+router.get("/dashboard", async (req, res) => {
+    try {
+      const token = req.headers.authorization?.split(" ")[1];
+      if (!token) return res.status(401).json({ message: "Unauthorized" });
+  
+      const decoded = jwt.verify(token, JWT_SECRET);
+      const hotelOwner = await HotelOwner.findById(decoded.id).select("-password"); // Exclude password
+  
+      if (!hotelOwner) return res.status(404).json({ message: "User not found" });
+  
+      res.json({
+        hotelName: hotelOwner.hotelName,
+        ownerName: hotelOwner.ownerName,
+        address: hotelOwner.address,
+        documents: {
+          noc: hotelOwner.noc,
+          buildingCert: hotelOwner.buildingCert,
+          tradeLicense: hotelOwner.tradeLicense,
+          policeVerification: hotelOwner.policeVerification,
+          fireSafety: hotelOwner.fireSafety,
+          gst: hotelOwner.gst,
+          insurance: hotelOwner.insurance,
+        }
+      });
+    } catch (error) {
+      console.error("Dashboard Fetch Error:", error);
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+  
+
 module.exports = router;
